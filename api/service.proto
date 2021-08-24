@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option go_package = "github.com/Alan-prog/auth_service";
+
+package service;
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+service Reverse {
+  rpc Alive (google.protobuf.Empty) returns (AliveResponse) {
+    option (google.api.http) = {
+      get: "/service/alive"
+    };
+  }
+}
+
+message AliveResponse {
+  string message = 1;
+}
+
