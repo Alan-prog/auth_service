@@ -53,7 +53,6 @@ func runHTTPProxy(ctx context.Context) {
 	if err != nil {
 		log.Fatalln("error while trying to register server")
 	}
-
 	mux := http.NewServeMux()
 	mux.Handle("/", grpcGWMUX)
 
