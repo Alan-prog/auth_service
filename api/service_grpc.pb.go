@@ -15,86 +15,194 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// ReverseClient is the client API for Reverse service.
+// AuthorizationServiceClient is the client API for AuthorizationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ReverseClient interface {
+type AuthorizationServiceClient interface {
 	Alive(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*AliveResponse, error)
+	SignUp(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	LogIn(ctx context.Context, in *LogInRequest, opts ...grpc.CallOption) (*LogInResponse, error)
+	ApprovePhoneNumber(ctx context.Context, in *ApproveRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
-type reverseClient struct {
+type authorizationServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewReverseClient(cc grpc.ClientConnInterface) ReverseClient {
-	return &reverseClient{cc}
+func NewAuthorizationServiceClient(cc grpc.ClientConnInterface) AuthorizationServiceClient {
+	return &authorizationServiceClient{cc}
 }
 
-func (c *reverseClient) Alive(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*AliveResponse, error) {
+func (c *authorizationServiceClient) Alive(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*AliveResponse, error) {
 	out := new(AliveResponse)
-	err := c.cc.Invoke(ctx, "/service.Reverse/Alive", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/service.AuthorizationService/Alive", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ReverseServer is the server API for Reverse service.
-// All implementations must embed UnimplementedReverseServer
+func (c *authorizationServiceClient) SignUp(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/service.AuthorizationService/SignUp", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authorizationServiceClient) LogIn(ctx context.Context, in *LogInRequest, opts ...grpc.CallOption) (*LogInResponse, error) {
+	out := new(LogInResponse)
+	err := c.cc.Invoke(ctx, "/service.AuthorizationService/LogIn", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authorizationServiceClient) ApprovePhoneNumber(ctx context.Context, in *ApproveRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/service.AuthorizationService/ApprovePhoneNumber", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// AuthorizationServiceServer is the server API for AuthorizationService service.
+// All implementations must embed UnimplementedAuthorizationServiceServer
 // for forward compatibility
-type ReverseServer interface {
+type AuthorizationServiceServer interface {
 	Alive(context.Context, *empty.Empty) (*AliveResponse, error)
-	mustEmbedUnimplementedReverseServer()
+	SignUp(context.Context, *SignUpRequest) (*empty.Empty, error)
+	LogIn(context.Context, *LogInRequest) (*LogInResponse, error)
+	ApprovePhoneNumber(context.Context, *ApproveRequest) (*empty.Empty, error)
+	mustEmbedUnimplementedAuthorizationServiceServer()
 }
 
-// UnimplementedReverseServer must be embedded to have forward compatible implementations.
-type UnimplementedReverseServer struct {
+// UnimplementedAuthorizationServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedAuthorizationServiceServer struct {
 }
 
-func (UnimplementedReverseServer) Alive(context.Context, *empty.Empty) (*AliveResponse, error) {
+func (UnimplementedAuthorizationServiceServer) Alive(context.Context, *empty.Empty) (*AliveResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Alive not implemented")
 }
-func (UnimplementedReverseServer) mustEmbedUnimplementedReverseServer() {}
+func (UnimplementedAuthorizationServiceServer) SignUp(context.Context, *SignUpRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SignUp not implemented")
+}
+func (UnimplementedAuthorizationServiceServer) LogIn(context.Context, *LogInRequest) (*LogInResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LogIn not implemented")
+}
+func (UnimplementedAuthorizationServiceServer) ApprovePhoneNumber(context.Context, *ApproveRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ApprovePhoneNumber not implemented")
+}
+func (UnimplementedAuthorizationServiceServer) mustEmbedUnimplementedAuthorizationServiceServer() {}
 
-// UnsafeReverseServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ReverseServer will
+// UnsafeAuthorizationServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AuthorizationServiceServer will
 // result in compilation errors.
-type UnsafeReverseServer interface {
-	mustEmbedUnimplementedReverseServer()
+type UnsafeAuthorizationServiceServer interface {
+	mustEmbedUnimplementedAuthorizationServiceServer()
 }
 
-func RegisterReverseServer(s grpc.ServiceRegistrar, srv ReverseServer) {
-	s.RegisterService(&Reverse_ServiceDesc, srv)
+func RegisterAuthorizationServiceServer(s grpc.ServiceRegistrar, srv AuthorizationServiceServer) {
+	s.RegisterService(&AuthorizationService_ServiceDesc, srv)
 }
 
-func _Reverse_Alive_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AuthorizationService_Alive_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(empty.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ReverseServer).Alive(ctx, in)
+		return srv.(AuthorizationServiceServer).Alive(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/service.Reverse/Alive",
+		FullMethod: "/service.AuthorizationService/Alive",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ReverseServer).Alive(ctx, req.(*empty.Empty))
+		return srv.(AuthorizationServiceServer).Alive(ctx, req.(*empty.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Reverse_ServiceDesc is the grpc.ServiceDesc for Reverse service.
+func _AuthorizationService_SignUp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SignUpRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorizationServiceServer).SignUp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/service.AuthorizationService/SignUp",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorizationServiceServer).SignUp(ctx, req.(*SignUpRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthorizationService_LogIn_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LogInRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorizationServiceServer).LogIn(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/service.AuthorizationService/LogIn",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorizationServiceServer).LogIn(ctx, req.(*LogInRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthorizationService_ApprovePhoneNumber_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ApproveRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorizationServiceServer).ApprovePhoneNumber(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/service.AuthorizationService/ApprovePhoneNumber",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorizationServiceServer).ApprovePhoneNumber(ctx, req.(*ApproveRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// AuthorizationService_ServiceDesc is the grpc.ServiceDesc for AuthorizationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Reverse_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "service.Reverse",
-	HandlerType: (*ReverseServer)(nil),
+var AuthorizationService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "service.AuthorizationService",
+	HandlerType: (*AuthorizationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Alive",
-			Handler:    _Reverse_Alive_Handler,
+			Handler:    _AuthorizationService_Alive_Handler,
+		},
+		{
+			MethodName: "SignUp",
+			Handler:    _AuthorizationService_SignUp_Handler,
+		},
+		{
+			MethodName: "LogIn",
+			Handler:    _AuthorizationService_LogIn_Handler,
+		},
+		{
+			MethodName: "ApprovePhoneNumber",
+			Handler:    _AuthorizationService_ApprovePhoneNumber_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

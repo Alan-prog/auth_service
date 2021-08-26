@@ -6,15 +6,57 @@ package service;
 import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";
 
-service Reverse {
+service AuthorizationService {
   rpc Alive (google.protobuf.Empty) returns (AliveResponse) {
     option (google.api.http) = {
-      get: "/service/alive"
+      get: "/alive"
     };
   }
+
+  rpc SignUp (SignUpRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/sign_up"
+      body:"*"
+    };
+  }
+
+  rpc LogIn (LogInRequest) returns (LogInResponse) {
+    option (google.api.http) = {
+      post: "/log_in"
+      body:"*"
+    };
+  }
+
+  rpc ApprovePhoneNumber (ApproveRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/approve_number"
+      body:"*"
+    };
+  }
+}
+
+message ApproveRequest {
+  string code = 1;
 }
 
 message AliveResponse {
   string message = 1;
 }
 
+message SignUpRequest{
+  string Name =1;
+  string LastName = 2;
+  string Login = 3;
+  string PhoneNumber = 4;
+  string Pass = 5;
+}
+
+message LogInRequest{
+  string Login =1;
+  string PhoneNumber = 2;
+  string Pass = 3;
+}
+
+message LogInResponse{
+  string token = 1;
+}
