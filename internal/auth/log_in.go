@@ -3,7 +3,7 @@ package auth
 import (
 	"context"
 	"fmt"
-	auth_service "github.com/proto_test/api"
+	auth_service "github.com/auth_service/api"
 )
 
 func (s *Layer) LogIn(ctx context.Context, req *auth_service.LogInRequest) (response *auth_service.LogInResponse, err error) {

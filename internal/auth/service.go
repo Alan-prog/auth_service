@@ -1,12 +1,12 @@
 package auth
 
 import (
-	pb "github.com/proto_test/grpc/api"
-	"github.com/proto_test/service/auth"
+	pb "github.com/auth_service/api"
+	"github.com/auth_service/service/auth"
 )
 
 type Layer struct {
-	pb.UnimplementedReverseServer
+	pb.UnimplementedAuthorizationServiceServer
 	Auth *auth.Service
 }
 

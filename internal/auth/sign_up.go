@@ -3,8 +3,8 @@ package auth
 import (
 	"context"
 	"fmt"
+	auth_service "github.com/auth_service/api"
 	"github.com/golang/protobuf/ptypes/empty"
-	auth_service "github.com/proto_test/api"
 )
 
 func (s *Layer) SignUp(ctx context.Context, req *auth_service.SignUpRequest) (response *empty.Empty, err error) {

@@ -3,10 +3,10 @@ package auth
 import (
 	"context"
 	"errors"
+	desc "github.com/auth_service/api"
+	"github.com/auth_service/models"
+	"github.com/auth_service/tools"
 	"github.com/dgrijalva/jwt-go"
-	desc "github.com/proto_test/api"
-	"github.com/proto_test/models"
-	"github.com/proto_test/tools"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"

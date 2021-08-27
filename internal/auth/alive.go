@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	pb "github.com/auth_service/api"
 	"github.com/golang/protobuf/ptypes/empty"
-	pb "github.com/proto_test/grpc/api"
 )
 
 func (s *Layer) Alive(ctx context.Context, req *empty.Empty) (response *pb.AliveResponse, err error) {
