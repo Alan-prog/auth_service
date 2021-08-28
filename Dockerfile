@@ -12,9 +12,11 @@ RUN git clone https://github.com/google/protobuf.git && \
     ldconfig && \
     make clean && \
     cd .. && \
-    rm -r protobuf
+    rm -r protobuf \
 
 WORKDIR /go/src/github.com/auth_service/
+
+RUN go test ./...
 
 COPY ./cmd ./cmd
 COPY ./api ./api
