@@ -15,7 +15,5 @@ build:
 	POSTGRES_USER=postgres -e POSTGRES_DB=postgres --rm -p 6000:5432 -p 8080:8080 -d auth
 run-docker:
 	docker exec -it auth /auth_bin --in_docker
-run-server:
-	docker exec -it auth /auth_bin --in_docker --in_server
 run:
 	go run cmd/main.go

@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	pb "github.com/auth_service/api"
 	auth2 "github.com/auth_service/internal/auth"
 	"github.com/auth_service/service/auth"
@@ -18,7 +17,6 @@ import (
 )
 
 const (
-	serverServiceAddr   = "65.21.251.70:8090"
 	localServiceAddr    = "127.0.0.1:8090"
 	serviceDockerPort   = ":8080"
 	serviceLocalPort    = ":8000"
@@ -52,12 +50,6 @@ func main() {
 		dbPort = dockerInsidePortDB
 		proxyPort = serviceDockerPort
 	}
-	if viper.GetBool(flagServer) {
-		serviceAddr = serverServiceAddr
-	}
-
-	fmt.Println(serviceAddr)
-	fmt.Println(proxyPort)
 
 	dbAdp, err := db.NewDbConnector(ctx, "postgres", "somepass", "localhost", "postgres", dbPort)
 	if err != nil {
