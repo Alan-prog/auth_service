@@ -16,6 +16,6 @@ build:
 run-docker:
 	docker exec -it auth /auth_bin --in_docker
 run-server:
-	docker exec -it auth /auth_bin --in_docker --server
+	docker exec -it auth /auth_bin --in_docker --in_server
 run:
 	go run cmd/main.go
