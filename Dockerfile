@@ -14,8 +14,6 @@ RUN rm -r protobuf
 
 WORKDIR /go/src/github.com/auth_service/
 
-RUN go test ./...
-
 COPY ./cmd ./cmd
 COPY ./api ./api
 COPY ./pkg ./pkg
