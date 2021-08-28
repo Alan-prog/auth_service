@@ -3,16 +3,14 @@ FROM golang:1.17 AS build
 # install protobuf from source
 RUN apt-get update && \
     apt-get -y install git unzip build-essential autoconf libtool
-RUN git clone https://github.com/google/protobuf.git && \
-    cd protobuf && \
-    ./autogen.sh && \
-    ./configure && \
-    make && \
-    make install && \
-    ldconfig && \
-    make clean && \
-    cd .. && \
-    rm -r protobuf \
+RUN git clone https://github.com/google/protobuf.git
+RUN cd protobuf && ./autogen.sh
+RUN cd protobuf && ./configure
+RUN cd protobuf && make
+RUN cd protobuf && make install
+RUN cd protobuf && ldconfig
+RUN cd protobuf && make clean
+RUN rm -r protobuf
 
 WORKDIR /go/src/github.com/auth_service/
 
