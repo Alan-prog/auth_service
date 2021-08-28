@@ -23,12 +23,12 @@ const (
 func main() {
 	ctx := context.Background()
 
-	db, err := db.NewDbConnector(ctx, "postgres", "somepass", "localhost", "postgres", 6000)
+	dbAdp, err := db.NewDbConnector(ctx, "postgres", "somepass", "localhost", "postgres", 5432)
 	if err != nil {
 		log.Fatal("error while connecting to db")
 	}
 
-	go runGRPCServer(serviceAddr, db)
+	go runGRPCServer(serviceAddr, dbAdp)
 	runHTTPProxy(ctx)
 }
 

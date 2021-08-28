@@ -10,8 +10,9 @@ generate:
 lint:
 	golangci-lint run
 build:
-	docker container rm --force auth_db 2>/dev/null && docker build -t auth_db . \
-	&& docker run --name auth_db -e POSTGRES_PASSWORD=somepass -e \
-	POSTGRES_USER=postgres -e POSTGRES_DB=postgres --rm -p 6000:5432 -p 8080:8080 -d auth_db
+	go test ./...
+	docker container rm --force auth 2>/dev/null && docker build -t auth . \
+	&& docker run --name auth -e POSTGRES_PASSWORD=somepass -e \
+	POSTGRES_USER=postgres -e POSTGRES_DB=postgres --rm -p 6000:5432 -p 8080:8080 -d auth
 run:
-	docker exec -it crypto_app /crypto
+	docker exec -it auth /auth_bin
