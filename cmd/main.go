@@ -2,34 +2,69 @@ package main
 
 import (
 	"context"
-	"github.com/auth_service/tools/db"
-	"github.com/jackc/pgx"
-	"log"
-	"net"
-	"net/http"
-
+	"fmt"
 	pb "github.com/auth_service/api"
 	auth2 "github.com/auth_service/internal/auth"
 	"github.com/auth_service/service/auth"
+	"github.com/auth_service/tools/db"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/jackc/pgx"
+	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
 	"google.golang.org/grpc"
+	"log"
+	"net"
+	"net/http"
 )
 
 const (
-	serviceAddr = "127.0.0.1:8081"
-	proxyAddr   = ":8080"
+	serverServiceAddr   = "65.21.251.70:8090"
+	localServiceAddr    = "127.0.0.1:8090"
+	serviceDockerPort   = ":8080"
+	serviceLocalPort    = ":8000"
+	dockerInsidePortDB  = uint16(5432)
+	dockerOutsidePortDB = uint16(6000)
+
+	flagInDocker = "in_docker"
+	flagServer   = "in_server"
 )
 
+func init() {
+	pflag.Bool(flagInDocker, false, "if run inside the docker")
+	pflag.Bool(flagServer, false, "if run on server")
+	pflag.Parse()
+	err := viper.BindPFlags(pflag.CommandLine)
+	if err != nil {
+		log.Fatalf("viper.BindPFlags: %s", err)
+	}
+}
+
 func main() {
+	var (
+		dbPort      = dockerOutsidePortDB
+		proxyPort   = serviceLocalPort
+		serviceAddr = localServiceAddr
+	)
+
 	ctx := context.Background()
 
-	dbAdp, err := db.NewDbConnector(ctx, "postgres", "somepass", "localhost", "postgres", 5432)
+	if viper.GetBool(flagInDocker) {
+		dbPort = dockerInsidePortDB
+		proxyPort = serviceDockerPort
+	}
+	if viper.GetBool(flagServer) {
+		serviceAddr = serverServiceAddr
+	}
+
+	fmt.Println(serviceAddr)
+	fmt.Println(proxyPort)
+
+	dbAdp, err := db.NewDbConnector(ctx, "postgres", "somepass", "localhost", "postgres", dbPort)
 	if err != nil {
 		log.Fatal("error while connecting to db")
 	}
-
 	go runGRPCServer(serviceAddr, dbAdp)
-	runHTTPProxy(ctx)
+	runHTTPProxy(ctx, serviceAddr, proxyPort)
 }
 
 func runGRPCServer(address string, db *pgx.Conn) {
@@ -37,6 +72,7 @@ func runGRPCServer(address string, db *pgx.Conn) {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
+
 	gRPCServer := grpc.NewServer()
 
 	// can add here services as much you need
@@ -48,7 +84,7 @@ func runGRPCServer(address string, db *pgx.Conn) {
 	log.Fatal(gRPCServer.Serve(lis))
 }
 
-func runHTTPProxy(ctx context.Context) {
+func runHTTPProxy(ctx context.Context, serviceAddr string, proxyAddr string) {
 	grpcGWMUX := runtime.NewServeMux()
 	grpcConn, err := grpc.Dial(serviceAddr, grpc.WithInsecure())
 	if err != nil {
@@ -60,6 +96,7 @@ func runHTTPProxy(ctx context.Context) {
 	if err != nil {
 		log.Fatalln("error while trying to register server")
 	}
+
 	mux := http.NewServeMux()
 	mux.Handle("/", grpcGWMUX)
 

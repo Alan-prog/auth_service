@@ -14,5 +14,9 @@ build:
 	docker container rm --force auth 2>/dev/null && docker build -t auth . \
 	&& docker run --name auth -e POSTGRES_PASSWORD=somepass -e \
 	POSTGRES_USER=postgres -e POSTGRES_DB=postgres --rm -p 6000:5432 -p 8080:8080 -d auth
+run-docker:
+	docker exec -it auth /auth_bin --in_docker
+run-server:
+	docker exec -it auth /auth_bin --in_docker --server
 run:
-	docker exec -it auth /auth_bin
+	go run cmd/main.go
